@@ -42,7 +42,7 @@ Run the automated script to delete the default VPC (required for lab).
 
 bash
 cd scripts
-./delete-default-vpc.sh
+./delete-default-vpc.sh --force
 Why?
 
 Lab requires clean custom VPC only
