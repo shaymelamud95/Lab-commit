@@ -23,6 +23,12 @@ variable "private_subnet_cidrs" {
   type        = list(string)
 }
 
+variable "public_subnet_cidr" {
+  description = "Public subnet CIDR block for NAT Gateway"
+  type        = string
+  default     = "10.0.100.0/24"
+}
+
 variable "cluster_name" {
   description = "EKS cluster name for subnet tagging"
   type        = string

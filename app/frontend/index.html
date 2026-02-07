@@ -1,0 +1,169 @@
+docker build -t backend:1.0.2 app/backenddocker build -t backend:1.0.2 app/backend<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab-Commit Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 80px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .version {
+            color: #667eea;
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .version.updating {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+        
+        .status {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 20px;
+        }
+        
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-dot.connected {
+            background: #4CAF50;
+        }
+        
+        .status-dot.disconnected {
+            background: #f44336;
+            animation: none;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hello Lab-commit</h1>
+        <div class="version" id="version">Loading...</div>
+        <div class="status">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="status-text">Connecting to backend...</span>
+        </div>
+        <div class="info">
+            <p>Source: <span id="source">-</span></p>
+            <p>Last updated: <span id="last-update">-</span></p>
+            <p>Polling interval: 5 seconds</p>
+        </div>
+    </div>
+
+    <script>
+        // Backend URL - injected at runtime via environment variable
+        const BACKEND_URL = window.BACKEND_URL || '/api';
+        const POLL_INTERVAL = 5000; // 5 seconds
+        
+        let isConnected = false;
+        
+        async function fetchVersion() {
+            const versionElement = document.getElementById('version');
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+            const sourceElement = document.getElementById('source');
+            const lastUpdateElement = document.getElementById('last-update');
+            
+            versionElement.classList.add('updating');
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/version`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                versionElement.textContent = data.version;
+                versionElement.classList.remove('updating');
+                
+                statusDot.classList.remove('disconnected');
+                statusDot.classList.add('connected');
+                statusText.textContent = 'Connected to backend';
+                
+                sourceElement.textContent = data.source || 'unknown';
+                lastUpdateElement.textContent = new Date().toLocaleTimeString();
+                
+                isConnected = true;
+                
+            } catch (error) {
+                console.error('Failed to fetch version:', error);
+                
+                if (!isConnected) {
+                    versionElement.textContent = 'N/A';
+                }
+                versionElement.classList.remove('updating');
+                
+                statusDot.classList.remove('connected');
+                statusDot.classList.add('disconnected');
+                statusText.textContent = `Backend unreachable: ${error.message}`;
+                
+                isConnected = false;
+            }
+        }
+        
+        // Initial fetch
+        fetchVersion();
+        
+        // Poll every 5 seconds
+        setInterval(fetchVersion, POLL_INTERVAL);
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+# Backend Helm chart values
+
+replicaCount: 2
+
+image:
+  repository: 923337630273.dkr.ecr.il-central-1.amazonaws.com/lab-commit-v1-backend
+  tag: "latest"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8080
+
+# RDS MySQL connection
+database:
+  host: lab-commit-v1-db.cnwcoewq02vx.il-central-1.rds.amazonaws.com
+  port: 3306
+  name: labcommit
+  # Username and password should be provided via secrets
+  username: admin
+  password: xY0Md+NXX%=zS!hR
+  # passwordSecretName: backend-db-credentials
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Pod annotations for Prometheus scraping
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+  prometheus.io/path: "/metrics"
+
+# Liveness and readiness probes
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
