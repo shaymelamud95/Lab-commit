@@ -153,3 +153,12 @@ module "cicd" {
 
   depends_on = [module.ecr]
 }
+
+# ArgoCD IAM Role for CodeCommit access
+module "argocd_iam" {
+  source = "./modules/argocd-iam"
+
+  project_name  = var.project_name
+  oidc_provider = replace(module.eks.oidc_provider_url, "https://", "")
+  aws_region    = var.aws_region
+}

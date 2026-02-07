@@ -155,7 +155,6 @@ output "acm_certificate_domain" {
   value       = module.acm.certificate_domain
 }
 
-
 #==============================================================================
 # CI/CD Outputs
 #==============================================================================
@@ -172,4 +171,26 @@ output "codepipeline_name" {
 output "codepipeline_url" {
   description = "CodePipeline console URL"
   value       = module.cicd.codepipeline_url
+}
+
+output "argocd_role_arn" {
+  description = "IAM role ARN for ArgoCD to access CodeCommit"
+  value       = module.argocd_iam.role_arn
+}
+
+
+# ArgoCD IAM outputs
+output "argocd_ssh_user_id" {
+  description = "SSH User ID for ArgoCD CodeCommit access"
+  value       = module.argocd_iam.ssh_user_id
+}
+
+output "argocd_ssh_key_secret_arn" {
+  description = "Secrets Manager ARN for ArgoCD SSH private key"
+  value       = module.argocd_iam.ssh_key_secret_arn
+}
+
+output "argocd_codecommit_ssh_url" {
+  description = "CodeCommit SSH URL for ArgoCD"
+  value       = module.argocd_iam.codecommit_ssh_url
 }

@@ -195,9 +195,9 @@ resource "aws_cloudwatch_event_rule" "codecommit_push" {
     source      = ["aws.codecommit"]
     detail-type = ["CodeCommit Repository State Change"]
     detail = {
-      event         = ["referenceCreated", "referenceUpdated"]
-      referenceType = ["branch"]
-      referenceName = ["main"]
+      event          = ["referenceCreated", "referenceUpdated"]
+      referenceType  = ["branch"]
+      referenceName  = ["main"]
       repositoryName = [aws_codecommit_repository.app.repository_name]
     }
   })

@@ -22,9 +22,7 @@ provider "aws" {
 }
 
 # =============================================================================
-# NOTE: Kubernetes/Helm providers NOT used here
+# NOTE: Kubernetes provider configured separately after EKS cluster exists
 # =============================================================================
-# EKS cluster is PRIVATE-ONLY (no public endpoint) as per exam requirements.
-# kubectl/helm commands must be run from Windows EC2 inside the VPC via SSM.
-# See README.md for post-deployment steps.
+# ArgoCD configuration is handled by post-terraform-deploy.sh script
 # =============================================================================

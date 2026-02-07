@@ -26,3 +26,16 @@ secrets/
 Thumbs.db
 
 .github
+# SSH Keys (generated manually or by scripts)
+*.pem
+*.key
+*.pub
+argocd-codecommit-key*
+*-ssh-key*
+/tmp/
+
+# Terraform sensitive files
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
