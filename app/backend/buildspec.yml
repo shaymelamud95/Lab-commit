@@ -26,4 +26,4 @@ phases:
 
 artifacts:
   files:
-    - imagedefinitions.json
+     - app/backend/imagedefinitions.json
