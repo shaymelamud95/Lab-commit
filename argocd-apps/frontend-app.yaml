@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://git-codecommit.il-central-1.amazonaws.com/v1/repos/lab-commit-v1-app
+    repoURL: ssh://APKA5N6ZWEJASQ62ZVU5@git-codecommit.il-central-1.amazonaws.com/v1/repos/lab-commit-v1-app
     targetRevision: main
     path: helm/frontend
     helm:
